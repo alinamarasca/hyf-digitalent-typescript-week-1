@@ -5,20 +5,6 @@
 // Encryption of the text is updated which each new
 // character typed by the user given there is a value set for “shift”
 
-// export const encrypt = (str, num) => {
-//   // you can comment this line
-//   str = str.toLowerCase();
-
-//   var result = "";
-//   var charcode = 0;
-
-//   for (var i = 0; i < str.length; i++) {
-//     charcode = str[i].charCodeAt() + num;
-//     result += String.fromCharCode(charcode);
-//   }
-//   return result;
-// };
-
 export const encryptText = (plainText, shift) => {
   let cipherArr = [];
   let cipherLetter;
