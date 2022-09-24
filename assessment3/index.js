@@ -1,10 +1,22 @@
-// console.log("hoi");
-
-// async function loadQuestions() {
-//   let url = "https://the-trivia-api.com/api/questions";
-//   let res = await fetch(url);
-//   let data = await res.json();
-//   console.log(data.res[0]);
-//   return data.res[0];
-// }
-// loadQuestions();
+"use strict";
+// import { IQuestion } from "./IQuestion";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+function loadQuestions() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let url = "https://the-trivia-api.com/api/questions";
+        let res = yield fetch(url);
+        let data = yield res.json();
+        console.log(data.res[0]);
+        return data.res[0];
+    });
+}
+loadQuestions();
+//# sourceMappingURL=index.js.map
