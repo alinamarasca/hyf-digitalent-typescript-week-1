@@ -21,7 +21,9 @@ fetch("https://the-trivia-api.com/api/questions")
   })
   .then(loadedQuestions => {
     console.log(loadedQuestions);
-    questions = loadedQuestions;
+    // filter out film and tv
+    questions = loadedQuestions.filter(q => q.category !== "Film & TV");
+    console.log(questions);
     startGame();
   })
   .catch(err => {
@@ -30,7 +32,7 @@ fetch("https://the-trivia-api.com/api/questions")
 
 //CONSTANTS
 const CORRECT_BONUS = 10;
-const MAX_QUESTIONS = 3;
+const MAX_QUESTIONS = 5;
 
 startGame = () => {
   questionCounter = 0;
@@ -67,14 +69,6 @@ getNewQuestion = () => {
     .sort((a, b) => a.sort - b.sort)
     .map(({ value }) => value);
 
-  // original
-  // choices.forEach(choice => {
-  //   console.log(choices);
-  //   const number = choice.dataset["number"];
-  //   choice.innerText = currentQuestion["choice" + number];
-  // });
-  // original
-
   choices.forEach((choice, index) => {
     choice.innerText = answers[index];
   });
@@ -95,7 +89,6 @@ choices.forEach(choice =>
     const selectedAnswer = e.target;
 
     console.log(selectedAnswer);
-    // const selectedAnswer = selectedChoice.dataset["number"];
 
     let classToApply = "";
     if (selectedAnswer.innerText == correctAnswer) {
@@ -115,4 +108,3 @@ incrementScore = num => {
   score += num;
   scoreText.innerText = score;
 };
-// startGame();
