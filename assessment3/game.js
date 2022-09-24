@@ -1,3 +1,11 @@
+//
+var difficulty;
+(function (difficulty) {
+  difficulty["easy"] = "1";
+  difficulty["medium"] = "2";
+  difficulty["hard"] = "3";
+})(difficulty || (difficulty = {}));
+//
 const question = document.getElementById("question");
 const category = document.getElementById("category");
 const choices = Array.from(document.getElementsByClassName("choice-text"));
@@ -9,7 +17,7 @@ let acceptingAnswers = false;
 let score = 0;
 let questionCounter = 0;
 let availableQuestions = [];
-let questions = [];
+// let questions: IQuestion[] = [];
 let userAnswer = "";
 let correctAnswer = "";
 fetch("https://the-trivia-api.com/api/questions")
@@ -19,17 +27,31 @@ fetch("https://the-trivia-api.com/api/questions")
   .then(loadedQuestions => {
     console.log(loadedQuestions);
     // filter out film and tv
-    questions = loadedQuestions.filter(q => q.category !== "Film & TV");
-    console.log(questions);
-    startGame();
-  })
-  .catch(err => {
-    console.log(err);
+    loadedQuestions.filter(q => q.category !== "Film & TV");
+    // sort by difficulty
+    // replace on numbers
+    loadedQuestions.map(q => {
+      if (q.difficulty === "easy") {
+        q.difficulty = difficulty.easy;
+      }
+      if (q.difficulty === "medium") {
+        q.difficulty = difficulty.medium;
+      }
+      if (q.difficulty === "hard") {
+        q.difficulty = difficulty.hard;
+      }
+      //sort
+      loadedQuestions.sort((a, b) => a.difficulty - b.difficulty);
+      console.log(loadedQuestions);
+      startGame(loadedQuestions);
+    });
+    // .catch(err => {
+    //   console.log(err);
   });
 //CONSTANTS
 const CORRECT_BONUS = 10;
 const MAX_QUESTIONS = 5;
-const startGame = () => {
+const startGame = questions => {
   questionCounter = 0;
   score = 0;
   // filter out film and tv
@@ -51,8 +73,9 @@ const getNewQuestion = () => {
   // keep track
   questionCounterText.innerText = `${questionCounter} / ${MAX_QUESTIONS}`;
   // randomize questions
-  const questionIndex = Math.floor(Math.random() * availableQuestions.length);
-  currentQuestion = availableQuestions[questionIndex];
+  // const questionIndex = Math.floor(Math.random() * availableQuestions.length);
+  // currentQuestion = availableQuestions[questionIndex];
+  currentQuestion = availableQuestions[questionCounter - 1];
   correctAnswer = currentQuestion.correctAnswer;
   console.log("correct", correctAnswer);
   // dismember question
@@ -69,7 +92,7 @@ const getNewQuestion = () => {
   choices.forEach((choice, index) => {
     choice.innerText = answers[index];
   });
-  availableQuestions.splice(questionIndex, 1);
+  availableQuestions.splice(questionCounter, 1);
   acceptingAnswers = true;
 };
 // when user answers
@@ -105,5 +128,5 @@ const incrementScore = num => {
   score = Number(score) + num;
   scoreText.innerText = String(score);
 };
-// export {};
+
 //# sourceMappingURL=game.js.map

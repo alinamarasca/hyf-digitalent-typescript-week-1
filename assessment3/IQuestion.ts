@@ -4,7 +4,7 @@ export interface IQuestion {
   correctAnswer: string;
   incorrectAnswers: string[];
   question: string;
-  difficulty: string[];
+  difficulty: any;
 }
 
 export interface IQuestion {}

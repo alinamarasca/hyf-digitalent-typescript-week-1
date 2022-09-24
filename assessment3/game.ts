@@ -1,5 +1,13 @@
 import { IQuestion } from "./IQuestion";
 
+//
+enum difficulty {
+  easy = "1",
+  medium = "2",
+  hard = "3"
+}
+
+//
 const question = document.getElementById("question") as HTMLElement | null;
 const category = document.getElementById("category") as HTMLElement | null;
 const choices = Array.from(document.getElementsByClassName("choice-text")) as
@@ -16,7 +24,7 @@ let acceptingAnswers = false;
 let score = 0;
 let questionCounter = 0;
 let availableQuestions: IQuestion[] = [];
-let questions: IQuestion[] = [];
+// let questions: IQuestion[] = [];
 
 let userAnswer = "";
 let correctAnswer = "";
@@ -28,21 +36,36 @@ fetch("https://the-trivia-api.com/api/questions")
   .then(loadedQuestions => {
     console.log(loadedQuestions);
     // filter out film and tv
-    questions = loadedQuestions.filter(
-      (q: IQuestion) => q.category !== "Film & TV"
-    );
-    console.log(questions);
-    startGame();
-  })
-  .catch(err => {
-    console.log(err);
+    loadedQuestions.filter((q: IQuestion) => q.category !== "Film & TV");
+    // sort by difficulty
+    // replace on numbers
+    loadedQuestions.map((q: IQuestion) => {
+      if (q.difficulty === "easy") {
+        q.difficulty = difficulty.easy;
+      }
+      if (q.difficulty === "medium") {
+        q.difficulty = difficulty.medium;
+      }
+      if (q.difficulty === "hard") {
+        q.difficulty = difficulty.hard;
+      }
+      //sort
+      loadedQuestions.sort(
+        (a: IQuestion, b: IQuestion) => a.difficulty - b.difficulty
+      );
+      console.log(loadedQuestions);
+      startGame(loadedQuestions);
+    });
+
+    // .catch(err => {
+    //   console.log(err);
   });
 
 //CONSTANTS
 const CORRECT_BONUS = 10;
 const MAX_QUESTIONS = 5;
 
-const startGame = () => {
+const startGame = (questions: IQuestion[]) => {
   questionCounter = 0;
   score = 0;
   // filter out film and tv
@@ -65,9 +88,11 @@ const getNewQuestion = () => {
   // keep track
   questionCounterText!.innerText = `${questionCounter} / ${MAX_QUESTIONS}`;
   // randomize questions
-  const questionIndex = Math.floor(Math.random() * availableQuestions.length);
+  // const questionIndex = Math.floor(Math.random() * availableQuestions.length);
 
-  currentQuestion = availableQuestions[questionIndex];
+  // currentQuestion = availableQuestions[questionIndex];
+  currentQuestion = availableQuestions[questionCounter - 1];
+
   correctAnswer = currentQuestion.correctAnswer;
   console.log("correct", correctAnswer);
   // dismember question
@@ -86,7 +111,7 @@ const getNewQuestion = () => {
     choice.innerText = answers[index];
   });
 
-  availableQuestions.splice(questionIndex, 1);
+  availableQuestions.splice(questionCounter, 1);
 
   acceptingAnswers = true;
 };
